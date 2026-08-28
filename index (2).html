@@ -1,0 +1,4689 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description"
+    content="Hortifruti da Roça — frutas, verduras e produtos frescos escolhidos com carinho.">
+
+  <title>Hortifruti da Roça</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+    rel="stylesheet">
+
+  <style>
+
+    /* =========================================================
+       VARIÁVEIS
+    ========================================================= */
+
+    :root {
+      --green: #2d5a27;
+      --dark: #1e3d1a;
+      --cream: #fdfbf7;
+      --paper: #f5efe6;
+      --orange: #e07a5f;
+      --gold: #f4a261;
+      --text: #2c2c2c;
+      --muted: #686868;
+      --border: #e6dec5;
+      --white: #ffffff;
+      --soft-green: #edf4e9;
+
+      --shadow:
+        0 15px 40px rgba(45, 90, 39, .08);
+
+      --shadow-hover:
+        0 24px 55px rgba(45, 90, 39, .15);
+    }
+
+
+    /* =========================================================
+       RESET
+    ========================================================= */
+
+    * {
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    html {
+      overflow-x: hidden;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::selection {
+      background: var(--orange);
+      color: white;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+
+    /* =========================================================
+       DETALHES DE FUNDO
+    ========================================================= */
+
+    .background-shape {
+      position: fixed;
+      z-index: -1;
+      width: 240px;
+      height: 240px;
+      border: 1px solid rgba(45, 90, 39, .055);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .shape-one {
+      top: 150px;
+      left: -140px;
+    }
+
+    .shape-two {
+      right: -150px;
+      top: 700px;
+      width: 300px;
+      height: 300px;
+    }
+
+
+    /* =========================================================
+       RÁDIO FIXADA NO TOPO
+    ========================================================= */
+
+    .radio-player {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 22px;
+      background:
+        linear-gradient(135deg, rgba(17, 47, 21, .98), rgba(38, 83, 35, .98));
+      color: white;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 8px 30px rgba(20, 45, 22, .22);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+    }
+
+    .radio-player::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.06), transparent);
+      transform: translateX(-100%);
+      animation: radioGlow 7s linear infinite;
+    }
+
+    .radio-inner {
+      position: relative;
+      z-index: 1;
+      width: min(1250px, 100%);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    /* BOTÃO PLAY — visual premium */
+    .radio-play {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      flex: 0 0 42px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+      background: linear-gradient(145deg, #f39a72, #df6f57);
+      color: #fff;
+      font-size: 14px;
+      line-height: 1;
+      padding-left: 2px;
+      box-shadow: 0 7px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.25);
+      transition: transform .25s ease, box-shadow .25s ease, filter .25s ease;
+    }
+
+    .radio-play:hover {
+      transform: translateY(-1px) scale(1.07);
+      filter: brightness(1.05);
+      box-shadow: 0 10px 26px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.3);
+    }
+
+    .radio-play:active {
+      transform: scale(.96);
+    }
+
+    .radio-play.playing::before {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border: 2px solid rgba(244,162,97,.65);
+      border-radius: 50%;
+      animation: radioPulse 1.7s ease-out infinite;
+    }
+
+    .radio-equalizer {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 22px;
+      flex: 0 0 auto;
+      opacity: .82;
+    }
+
+    .radio-equalizer i {
+      display: block;
+      width: 3px;
+      height: 7px;
+      border-radius: 99px;
+      background: var(--gold);
+      animation: radioBars 1s ease-in-out infinite alternate;
+    }
+
+    .radio-equalizer i:nth-child(2) { animation-delay: -.25s; }
+    .radio-equalizer i:nth-child(3) { animation-delay: -.55s; }
+    .radio-equalizer i:nth-child(4) { animation-delay: -.35s; }
+    .radio-equalizer i:nth-child(5) { animation-delay: -.7s; }
+
+    .radio-player:not(:has(.radio-play.playing)) .radio-equalizer i {
+      animation-play-state: paused;
+      height: 6px;
+    }
+
+    @keyframes radioBars {
+      from { height: 5px; }
+      to { height: 20px; }
+    }
+
+    /* TEXTO + MARQUEE */
+    .radio-message {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .radio-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border: 1px solid rgba(255,255,255,.13);
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.07);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      white-space: nowrap;
+    }
+
+    .radio-dot {
+      width: 7px;
+      height: 7px;
+      flex: 0 0 7px;
+      border-radius: 50%;
+      background: #ff7562;
+      box-shadow: 0 0 0 rgba(255,117,98,.7);
+      animation: liveDot 1.5s infinite;
+    }
+
+    .radio-marquee {
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+      min-width: 0;
+      max-width: 760px;
+      mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    }
+
+    .radio-marquee-track {
+      display: flex;
+      width: max-content;
+      animation: radioMarquee 18s linear infinite;
+      will-change: transform;
+    }
+
+    .radio-marquee span {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding-right: 48px;
+      white-space: nowrap;
+      color: rgba(255,255,255,.94);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .radio-marquee .radio-star {
+      color: var(--gold);
+      font-size: 14px;
+    }
+
+    /* VOLUME */
+    .radio-volume {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 999px;
+      background: rgba(0,0,0,.10);
+    }
+
+    .radio-volume-icon {
+      font-size: 15px;
+      line-height: 1;
+    }
+
+    .radio-volume input {
+      width: 78px;
+      accent-color: var(--gold);
+      cursor: pointer;
+    }
+
+    @keyframes radioMarquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes radioGlow {
+      0% { transform: translateX(-100%); }
+      55%, 100% { transform: translateX(100%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .radio-marquee-track,
+      .radio-player::before { animation: none; }
+    }
+
+    /* =========================================================
+       TOPBAR
+    ========================================================= */
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      min-height: 36px;
+
+      padding: 8px 7%;
+
+      background: var(--dark);
+      color: white;
+
+      font-size: 12px;
+
+      /* espaço para o player fixado */
+      margin-top: 60px;
+    }
+
+    .topbar a {
+      color: var(--gold);
+
+      transition:
+        opacity .2s;
+    }
+
+    .topbar a:hover {
+      opacity: .75;
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    header {
+      position: relative;
+      z-index: 100;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      width: min(1250px, 100%);
+
+      margin: auto;
+
+      padding: 24px 7%;
+    }
+
+
+    /* =========================================================
+       LOGO
+    ========================================================= */
+
+    .logo {
+      display: flex;
+      align-items: center;
+
+      gap: 9px;
+
+      border: 0;
+
+      background: transparent;
+
+      color: var(--green);
+
+      font:
+        bold 23px
+        "Playfair Display",
+        serif;
+
+      padding: 0;
+
+      transition:
+        transform .25s ease;
+    }
+
+    .logo:hover {
+      transform:
+        translateY(-2px);
+    }
+
+    .logo em {
+      color: var(--orange);
+
+      font-style: normal;
+    }
+
+    .logo-icon {
+      display: grid;
+      place-items: center;
+
+      width: 37px;
+      height: 37px;
+
+      flex: 0 0 37px;
+
+      border-radius:
+        50% 50% 50% 5px;
+
+      background: var(--green);
+
+      color: white;
+
+      transform:
+        rotate(-10deg);
+
+      transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+    }
+
+    .logo:hover .logo-icon {
+      transform:
+        rotate(-10deg)
+        scale(1.08);
+
+      box-shadow:
+        0 8px 20px
+        rgba(45, 90, 39, .2);
+    }
+
+
+    /* =========================================================
+       NAVEGAÇÃO
+    ========================================================= */
+
+    nav {
+      display: flex;
+      align-items: center;
+
+      gap: 25px;
+
+      color: #555;
+
+      font-size: 13px;
+
+      font-weight: bold;
+    }
+
+    nav button,
+    nav a {
+      border: 0;
+
+      background: transparent;
+
+      color: inherit;
+
+      font-weight: bold;
+
+      transition:
+        color .2s ease,
+        transform .2s ease;
+    }
+
+    nav button:hover,
+    nav a:hover {
+      color: var(--green);
+
+      transform:
+        translateY(-2px);
+    }
+
+
+    /* =========================================================
+       CARRINHO
+    ========================================================= */
+
+    .cart-button {
+      color: var(--green);
+    }
+
+    .cart-button span {
+      display: inline-grid;
+      place-items: center;
+
+      min-width: 19px;
+      height: 19px;
+
+      margin-left: 4px;
+
+      padding: 0 5px;
+
+      border-radius: 20px;
+
+      background: var(--orange);
+
+      color: white;
+
+      font-size: 10px;
+    }
+
+
+    /* =========================================================
+       BOTÕES
+    ========================================================= */
+
+    .main-button,
+    .instagram-button {
+      position: relative;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      justify-content: center;
+
+      gap: 8px;
+
+      border: 0;
+
+      border-radius: 8px;
+
+      padding: 14px 20px;
+
+      background: var(--green);
+
+      color: white !important;
+
+      font-weight: bold;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 10px 24px
+        rgba(45, 90, 39, .14);
+
+      transition:
+        transform .3s ease,
+        box-shadow .3s ease,
+        background .25s ease;
+    }
+
+    .main-button:hover,
+    .instagram-button:hover {
+      background: var(--dark);
+
+      transform:
+        translateY(-3px);
+
+      box-shadow:
+        0 16px 32px
+        rgba(45, 90, 39, .2);
+    }
+
+    .main-button::after,
+    .instagram-button::after {
+      content: "";
+
+      position: absolute;
+
+      top: -80%;
+      left: -110%;
+
+      width: 45%;
+      height: 260%;
+
+      background:
+        rgba(255, 255, 255, .20);
+
+      transform:
+        rotate(20deg);
+
+      transition:
+        left .6s ease;
+    }
+
+    .main-button:hover::after,
+    .instagram-button:hover::after {
+      left: 125%;
+    }
+
+
+    /* =========================================================
+       MENU MOBILE
+    ========================================================= */
+
+    .menu-button {
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      width: 44px;
+      height: 44px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 50%;
+
+      background: var(--paper);
+
+      color: var(--green);
+
+      font-size: 25px;
+
+      line-height: 1;
+
+      transition:
+        transform .25s ease,
+        background .25s ease;
+    }
+
+    .menu-button:hover {
+      transform:
+        scale(1.05);
+
+      background:
+        white;
+    }
+
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+
+    .hero {
+      position: relative;
+
+      display: grid;
+
+      grid-template-columns:
+        .9fr 1.1fr;
+
+      align-items: center;
+
+      gap: 7%;
+
+      width:
+        min(1250px, 100%);
+
+      min-height: 620px;
+
+      margin: auto;
+
+      padding: 70px 7%;
+    }
+
+    .hero-content {
+      animation:
+        fadeUp .7s ease both;
+    }
+
+    .eyebrow {
+      color: var(--orange);
+
+      font-size: 11px;
+
+      font-weight: bold;
+
+      letter-spacing: .15em;
+
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin:
+        20px 0;
+
+      color: var(--green);
+
+      font-family:
+        "Playfair Display",
+        serif;
+
+      font-weight: 600;
+
+      letter-spacing: -.06em;
+
+      line-height: .98;
+    }
+
+    h1 {
+      font-size:
+        clamp(50px, 6vw, 80px);
+    }
+
+    h2 {
+      font-size:
+        clamp(40px, 5vw, 62px);
+    }
+
+    h1 i,
+    h2 i {
+      color: var(--orange);
+    }
+
+    .hero p,
+    .story p,
+    .products-page-heading p,
+    .location-text {
+      max-width: 440px;
+
+      color: var(--muted);
+
+      line-height: 1.8;
+
+      font-size: 14px;
+    }
+
+
+    /* =========================================================
+       HERO ACTIONS
+    ========================================================= */
+
+    .hero-actions {
+      display: flex;
+
+      align-items: center;
+
+      flex-wrap: wrap;
+
+      gap: 25px;
+
+      margin-top: 30px;
+    }
+
+    .text-button,
+    .back-button {
+      border: 0;
+
+      background: transparent;
+
+      color: var(--green);
+
+      font-weight: bold;
+
+      transition:
+        transform .25s ease,
+        color .25s ease;
+    }
+
+    .text-button:hover,
+    .back-button:hover {
+      color: var(--orange);
+
+      transform:
+        translateX(4px);
+    }
+
+
+    /* =========================================================
+       SCROLL INDICATOR
+    ========================================================= */
+
+    .scroll-indicator {
+      display: flex;
+
+      align-items: center;
+
+      gap: 9px;
+
+      margin-top: 45px;
+
+      color: var(--muted);
+
+      font-size: 11px;
+
+      font-weight: 600;
+    }
+
+    .scroll-line {
+      width: 34px;
+      height: 1px;
+
+      background: var(--orange);
+
+      animation:
+        scrollLine 1.8s
+        ease-in-out infinite;
+    }
+
+
+    /* =========================================================
+       HERO IMAGE
+    ========================================================= */
+
+    .hero-image {
+      position: relative;
+
+      overflow: hidden;
+
+      width: 100%;
+
+      aspect-ratio: 1.05;
+
+      border-radius:
+        50% 50% 5px 50%;
+
+      box-shadow:
+        18px 20px 0
+        rgba(224, 122, 95, .17),
+
+        0 25px 55px
+        rgba(45, 90, 39, .10);
+
+      animation:
+        heroIn .8s ease both;
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      transition:
+        transform .9s
+        cubic-bezier(.2,.8,.2,1);
+    }
+
+    .hero-image:hover img {
+      transform:
+        scale(1.045);
+    }
+
+
+    /* =========================================================
+       STAMP
+    ========================================================= */
+
+    .stamp {
+      position: absolute;
+
+      right: 7%;
+      bottom: 9%;
+
+      display: grid;
+
+      place-items: center;
+
+      width: 90px;
+      height: 90px;
+
+      border-radius: 50%;
+
+      background: var(--gold);
+
+      color: var(--dark);
+
+      font:
+        italic 12px
+        "Playfair Display";
+
+      text-align: center;
+
+      transform:
+        rotate(10deg);
+
+      box-shadow:
+        0 10px 24px
+        rgba(45, 90, 39, .12);
+
+      animation:
+        floatStamp 4.5s
+        ease-in-out infinite;
+    }
+
+
+    /* =========================================================
+       BENEFITS
+    ========================================================= */
+
+    .benefits {
+      display: flex;
+
+      justify-content:
+        space-around;
+
+      gap: 25px;
+
+      padding:
+        17px 7%;
+
+      background:
+        var(--orange);
+
+      color: white;
+
+      font:
+        italic 17px
+        "Playfair Display";
+    }
+
+    .benefits div {
+      transition:
+        transform .3s ease;
+    }
+
+    .benefits div:hover {
+      transform:
+        translateY(-3px);
+    }
+
+
+    /* =========================================================
+       REVEAL
+    ========================================================= */
+
+    .reveal {
+      opacity: 0;
+
+      transform:
+        translateY(25px);
+
+      transition:
+        opacity .7s ease,
+        transform .7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+
+      transform: none;
+    }
+
+
+    /* =========================================================
+       HISTÓRIA
+    ========================================================= */
+
+    .story {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      align-items: center;
+
+      gap: 10%;
+
+      width:
+        min(1250px, 100%);
+
+      margin: auto;
+
+      padding:
+        110px 7%
+        120px;
+    }
+
+    .story-image {
+      overflow: hidden;
+
+      width: 100%;
+
+      aspect-ratio: 1;
+
+      border-radius:
+        5px 50% 5px 5px;
+
+      box-shadow:
+        0 20px 50px
+        rgba(45, 90, 39, .10);
+    }
+
+    .story-image img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      transition:
+        transform .8s
+        cubic-bezier(.2,.8,.2,1);
+    }
+
+    .story-image:hover img {
+      transform:
+        scale(1.045);
+    }
+
+
+    /* =========================================================
+       HIGHLIGHTS
+    ========================================================= */
+
+    .highlights {
+      width:
+        min(1050px, 86%);
+
+      margin:
+        0 auto 80px;
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 18px;
+    }
+
+    .highlight {
+      padding: 25px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      background:
+        rgba(255, 255, 255, .72);
+
+      text-align: center;
+
+      transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+    }
+
+    .highlight:hover {
+      transform:
+        translateY(-5px);
+
+      box-shadow:
+        var(--shadow-hover);
+    }
+
+    .highlight strong {
+      display: block;
+
+      margin-bottom: 5px;
+
+      color: var(--green);
+
+      font:
+        28px
+        "Playfair Display";
+    }
+
+    .highlight span {
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+
+    /* =========================================================
+       GALERIA
+    ========================================================= */
+
+    .gallery-section {
+      width:
+        min(1250px, 100%);
+
+      margin: auto;
+
+      padding:
+        40px 7%
+        100px;
+    }
+
+    .section-heading {
+      margin-bottom: 30px;
+    }
+
+    .section-heading h2 {
+      margin-bottom: 12px;
+    }
+
+    .section-heading p {
+      max-width: 530px;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+
+      font-size: 14px;
+    }
+
+    .gallery {
+      display: grid;
+
+      grid-template-columns:
+        1.3fr .7fr .7fr;
+
+      grid-template-rows:
+        210px 210px;
+
+      gap: 14px;
+    }
+
+    .gallery-item {
+      position: relative;
+
+      overflow: hidden;
+
+      border-radius: 12px;
+
+      background: var(--paper);
+    }
+
+    .gallery-item:first-child {
+      grid-row: span 2;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      transition:
+        transform .8s ease;
+    }
+
+    .gallery-item:hover img {
+      transform:
+        scale(1.06);
+    }
+
+    .gallery-item::after {
+      content: "";
+
+      position: absolute;
+
+      inset: 0;
+
+      background:
+        linear-gradient(
+          to top,
+          rgba(0,0,0,.25),
+          transparent 45%
+        );
+
+      pointer-events: none;
+    }
+
+
+    /* =========================================================
+       CONTATO
+    ========================================================= */
+
+    .contact {
+      position: relative;
+
+      width:
+        min(1050px, 86%);
+
+      margin:
+        40px auto 100px;
+
+      padding:
+        65px 8%;
+
+      background:
+        var(--paper);
+
+      text-align: center;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 18px 50px
+        rgba(45, 90, 39, .06);
+    }
+
+    .contact p {
+      max-width: 550px;
+
+      margin:
+        0 auto;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+    }
+
+    .contact .main-button {
+      margin-top: 25px;
+    }
+
+    .contact::before,
+    .contact::after {
+      content: "";
+
+      position: absolute;
+
+      border:
+        1px solid
+        rgba(224, 122, 95, .18);
+
+      border-radius: 50%;
+
+      width: 180px;
+      height: 180px;
+
+      pointer-events: none;
+    }
+
+    .contact::before {
+      left: -110px;
+      top: -110px;
+    }
+
+    .contact::after {
+      right: -110px;
+      bottom: -110px;
+    }
+
+
+    /* =========================================================
+       LOCALIZAÇÃO
+    ========================================================= */
+
+    .location-section {
+      width:
+        min(1050px, 86%);
+
+      margin:
+        0 auto 100px;
+
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 20px;
+    }
+
+    .info-card {
+      padding: 30px;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 14px;
+
+      background: white;
+
+      box-shadow:
+        0 8px 30px
+        rgba(45, 90, 39, .04);
+
+      transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+    }
+
+    .info-card:hover {
+      transform:
+        translateY(-5px);
+
+      box-shadow:
+        var(--shadow-hover);
+    }
+
+    .info-icon {
+      display: grid;
+
+      place-items: center;
+
+      width: 48px;
+      height: 48px;
+
+      margin-bottom: 18px;
+
+      border-radius: 12px;
+
+      background:
+        var(--soft-green);
+
+      font-size: 22px;
+    }
+
+    .info-card h3 {
+      margin:
+        0 0 9px;
+
+      color:
+        var(--green);
+
+      font:
+        23px
+        "Playfair Display";
+    }
+
+    .info-card p {
+      margin: 5px 0;
+
+      color: var(--muted);
+
+      line-height: 1.7;
+
+      font-size: 13px;
+    }
+
+    .open-status {
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 7px;
+
+      margin-top: 12px;
+
+      color: var(--green);
+
+      font-size: 12px;
+
+      font-weight: bold;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+
+      border-radius: 50%;
+
+      background:
+        #69a75e;
+    }
+
+
+    /* =========================================================
+       PRODUTOS
+    ========================================================= */
+
+    .products-page {
+      width:
+        min(1250px, 100%);
+
+      min-height: 800px;
+
+      margin: auto;
+
+      padding:
+        40px 7%
+        100px;
+    }
+
+    .products-page-heading {
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items: end;
+
+      gap: 30px;
+
+      margin:
+        70px 0 25px;
+    }
+
+    .catalog-count {
+      margin:
+        28px 0 18px;
+
+      color:
+        var(--green);
+
+      font-size: 13px;
+
+      font-weight: bold;
+    }
+
+    .catalog-count strong {
+      color:
+        var(--orange);
+
+      font:
+        30px
+        "Playfair Display";
+    }
+
+
+    /* =========================================================
+       BUSCA
+    ========================================================= */
+
+    .search-box {
+      position: relative;
+
+      width: 100%;
+
+      margin:
+        20px 0 22px;
+    }
+
+    .search-box input {
+      width: 100%;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      outline: none;
+
+      padding:
+        15px
+        45px
+        15px
+        18px;
+
+      background: white;
+
+      color: var(--text);
+
+      font-size: 13px;
+
+      transition:
+        border-color .25s ease,
+        box-shadow .25s ease;
+    }
+
+    .search-box input:focus {
+      border-color:
+        rgba(45, 90, 39, .4);
+
+      box-shadow:
+        0 0 0 4px
+        rgba(45, 90, 39, .06);
+    }
+
+    .search-icon {
+      position: absolute;
+
+      right: 16px;
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      color:
+        var(--green);
+    }
+
+
+    /* =========================================================
+       FILTROS
+    ========================================================= */
+
+    .filters {
+      display: flex;
+
+      flex-wrap: wrap;
+
+      gap: 9px;
+
+      margin-bottom: 28px;
+    }
+
+    .filter {
+      border:
+        1px solid var(--border);
+
+      border-radius: 22px;
+
+      padding:
+        10px 18px;
+
+      background:
+        transparent;
+
+      color:
+        var(--muted);
+
+      font-size: 12px;
+
+      transition:
+        transform .2s ease,
+        background .2s ease,
+        color .2s ease;
+    }
+
+    .filter:hover,
+    .filter.active {
+      border-color:
+        var(--green);
+
+      background:
+        var(--green);
+
+      color:
+        white;
+
+      transform:
+        translateY(-2px);
+    }
+
+
+    /* =========================================================
+       PRODUCT GRID
+    ========================================================= */
+
+    .product-grid {
+      display: grid;
+
+      grid-template-columns:
+        repeat(3, 1fr);
+
+      gap: 22px;
+    }
+
+
+    /* =========================================================
+       CARD PRODUTO
+    ========================================================= */
+
+    .product {
+      overflow: hidden;
+
+      border:
+        1px solid var(--border);
+
+      border-radius: 12px;
+
+      background:
+        white;
+
+      box-shadow:
+        0 5px 20px
+        rgba(45, 90, 39, .04);
+
+      opacity: 0;
+
+      transform:
+        translateY(20px);
+
+      animation:
+        productIn .55s
+        ease forwards;
+
+      transition:
+        transform .35s
+        cubic-bezier(.2,.8,.2,1),
+
+        box-shadow .35s,
+
+        border-color .35s;
+    }
+
+    .product:hover {
+      transform:
+        translateY(-8px);
+
+      border-color:
+        rgba(45, 90, 39, .20);
+
+      box-shadow:
+        var(--shadow-hover);
+    }
+
+
+    .product-image {
+      position: relative;
+
+      height: 230px;
+
+      overflow: hidden;
+
+      background:
+        var(--paper);
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      transition:
+        transform .7s
+        cubic-bezier(.2,.8,.2,1);
+    }
+
+    .product:hover
+    .product-image img {
+      transform:
+        scale(1.055);
+    }
+
+
+    /* =========================================================
+       TAGS
+    ========================================================= */
+
+    .tag,
+    .fresh,
+    .offer-tag {
+      position: absolute;
+
+      border-radius: 20px;
+
+      padding:
+        7px 10px;
+
+      font-size: 10px;
+
+      font-weight: bold;
+    }
+
+    .tag {
+      top: 14px;
+      left: 14px;
+
+      background:
+        var(--cream);
+
+      color:
+        var(--green);
+    }
+
+    .fresh {
+      right: 12px;
+      bottom: 12px;
+
+      background:
+        var(--orange);
+
+      color:
+        white;
+
+      font:
+        italic 11px
+        "Playfair Display";
+    }
+
+    .offer-tag {
+      right: 12px;
+      top: 14px;
+
+      background:
+        var(--green);
+
+      color:
+        white;
+    }
+
+
+    /* =========================================================
+       PRODUCT INFO
+    ========================================================= */
+
+    .product-info {
+      padding: 19px;
+    }
+
+    .product h3 {
+      margin:
+        0 0 6px;
+
+      color:
+        var(--green);
+
+      font:
+        22px
+        "Playfair Display";
+    }
+
+    .product p {
+      min-height: 36px;
+
+      margin:
+        0 0 15px;
+
+      color:
+        #888;
+
+      font-size: 12px;
+
+      line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       PREÇO
+    ========================================================= */
+
+    .price-area {
+      display: flex;
+
+      align-items: end;
+
+      gap: 9px;
+
+      margin-bottom: 15px;
+    }
+
+    .old-price {
+      color: #aaa;
+
+      font-size: 11px;
+
+      text-decoration:
+        line-through;
+    }
+
+    .price {
+      color:
+        var(--green);
+
+      font:
+        bold 23px
+        "Playfair Display";
+    }
+
+    .price.consult {
+      font-size: 16px;
+    }
+
+
+    /* =========================================================
+       ADD BUTTON
+    ========================================================= */
+
+    .add-button {
+      width: 100%;
+
+      border: 0;
+
+      border-top:
+        1px solid var(--border);
+
+      padding:
+        14px 0 0;
+
+      background:
+        transparent;
+
+      color:
+        var(--green);
+
+      text-align:
+        left;
+
+      font-size: 12px;
+
+      font-weight: bold;
+
+      transition:
+        color .25s ease,
+        padding-left .25s ease;
+    }
+
+    .add-button:hover {
+      padding-left: 5px;
+
+      color:
+        var(--orange);
+    }
+
+    .add-button.selected {
+      color:
+        var(--orange);
+    }
+
+
+    /* =========================================================
+       SEM RESULTADOS
+    ========================================================= */
+
+    .empty-search {
+      grid-column:
+        1 / -1;
+
+      padding:
+        60px 20px;
+
+      border:
+        1px dashed var(--border);
+
+      border-radius: 14px;
+
+      color:
+        var(--muted);
+
+      text-align:
+        center;
+    }
+
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    footer {
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items: center;
+
+      gap: 20px;
+
+      padding:
+        28px 7%;
+
+      border-top:
+        1px solid var(--border);
+
+      color:
+        var(--green);
+
+      font-size: 12px;
+    }
+
+
+    /* =========================================================
+       ANIMAÇÕES
+    ========================================================= */
+
+    @keyframes fadeUp {
+
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(25px);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+
+    }
+
+
+    @keyframes heroIn {
+
+      from {
+        opacity: 0;
+
+        transform:
+          translateY(18px)
+          scale(.97);
+      }
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0)
+          scale(1);
+      }
+
+    }
+
+
+    @keyframes floatStamp {
+
+      0%,
+      100% {
+        transform:
+          rotate(10deg)
+          translateY(0);
+      }
+
+      50% {
+        transform:
+          rotate(7deg)
+          translateY(-7px);
+      }
+
+    }
+
+
+    @keyframes scrollLine {
+
+      0%,
+      100% {
+        width: 25px;
+        opacity: .5;
+      }
+
+      50% {
+        width: 45px;
+        opacity: 1;
+      }
+
+    }
+
+
+    @keyframes productIn {
+
+      to {
+        opacity: 1;
+
+        transform:
+          translateY(0);
+      }
+
+    }
+
+
+    @keyframes radioPulse {
+
+      0% {
+        transform: scale(.9);
+
+        opacity: .9;
+      }
+
+      100% {
+        transform: scale(1.35);
+
+        opacity: 0;
+      }
+
+    }
+
+
+    @keyframes liveDot {
+
+      0%,
+      100% {
+        opacity: 1;
+
+        transform:
+          scale(1);
+      }
+
+      50% {
+        opacity: .4;
+
+        transform:
+          scale(.75);
+      }
+
+    }
+
+
+    /* =========================================================
+       TABLET
+    ========================================================= */
+
+    @media (max-width: 1000px) {
+
+      header {
+        padding:
+          20px 5%;
+      }
+
+      .hero,
+      .story,
+      .products-page,
+      .gallery-section {
+        padding-left: 5%;
+        padding-right: 5%;
+      }
+
+      .product-grid {
+        grid-template-columns:
+          repeat(2, 1fr);
+      }
+
+      .products-page-heading {
+        align-items:
+          flex-start;
+      }
+
+      .gallery {
+        grid-template-columns:
+          1fr 1fr;
+
+        grid-template-rows:
+          250px 180px;
+      }
+
+      .gallery-item:first-child {
+        grid-row: span 1;
+
+        grid-column: span 2;
+      }
+
+    }
+
+
+    /* =========================================================
+       CELULAR
+    ========================================================= */
+
+    @media (max-width: 800px) {
+
+      /* RÁDIO */
+
+      .radio-player {
+        min-height: 56px;
+        padding: 7px 10px;
+      }
+
+      .radio-inner {
+        gap: 9px;
+      }
+
+      .radio-play {
+        width: 36px;
+        height: 36px;
+        flex-basis: 36px;
+      }
+
+      .radio-equalizer {
+        display: none;
+      }
+
+      .radio-message {
+        gap: 5px;
+      }
+
+      .radio-live {
+        display: none;
+      }
+
+      .radio-marquee {
+        max-width: none;
+      }
+
+      .radio-marquee span {
+        font-size: 9px;
+        letter-spacing: .07em;
+        padding-right: 30px;
+      }
+
+      .radio-volume {
+        display: none;
+      }
+
+
+      /* TOPBAR */
+
+      .topbar {
+        justify-content:
+          center;
+
+        min-height: 32px;
+
+        margin-top:
+          52px;
+
+        padding:
+          7px 15px;
+
+        font-size: 10px;
+
+        text-align: center;
+      }
+
+      .topbar a {
+        display: none;
+      }
+
+
+      /* HEADER */
+
+      header {
+        position: relative;
+
+        display: flex;
+
+        justify-content:
+          center;
+
+        min-height: 80px;
+
+        padding:
+          18px;
+      }
+
+
+      /* MENU */
+
+      .menu-button {
+        position: absolute;
+
+        left: 18px;
+        top: 18px;
+
+        display: flex;
+
+        z-index: 120;
+      }
+
+
+      /* LOGO */
+
+      .logo {
+        max-width:
+          calc(100% - 90px);
+
+        margin:
+          0 auto;
+
+        font-size: 20px;
+
+        white-space:
+          nowrap;
+      }
+
+      .logo-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+      }
+
+
+      /* NAV */
+
+      nav {
+        position: fixed;
+
+        z-index: 110;
+
+        top: 0;
+        bottom: 0;
+        left: 0;
+
+        width:
+          min(300px, 84vw);
+
+        display: flex;
+
+        flex-direction:
+          column;
+
+        align-items:
+          stretch;
+
+        gap: 5px;
+
+        padding:
+          90px 20px 25px;
+
+        border-right:
+          1px solid var(--border);
+
+        border-radius:
+          0 24px 24px 0;
+
+        background:
+          rgba(253,251,247,.98);
+
+        box-shadow:
+          15px 0 45px
+          rgba(45,90,39,.18);
+
+        transform:
+          translateX(-105%);
+
+        opacity: 0;
+
+        pointer-events:
+          none;
+
+        transition:
+          transform .3s ease,
+          opacity .25s ease;
+      }
+
+      nav.open {
+        transform:
+          translateX(0);
+
+        opacity: 1;
+
+        pointer-events:
+          auto;
+      }
+
+      nav button,
+      nav a {
+        width: 100%;
+
+        min-height: 48px;
+
+        padding:
+          13px 12px;
+
+        text-align:
+          left;
+
+        border-radius:
+          8px;
+      }
+
+      nav button:hover,
+      nav a:hover {
+        background:
+          rgba(45,90,39,.06);
+
+        transform: none;
+      }
+
+      nav .instagram-button {
+        justify-content:
+          center;
+
+        margin-top:
+          10px;
+
+        text-align:
+          center;
+      }
+
+
+      /* HERO */
+
+      .hero {
+        display: flex;
+
+        flex-direction:
+          column;
+
+        gap: 42px;
+
+        min-height:
+          auto;
+
+        padding:
+          55px 20px 60px;
+      }
+
+      .eyebrow {
+        font-size: 10px;
+
+        letter-spacing:
+          .12em;
+      }
+
+      h1 {
+        margin:
+          17px 0;
+
+        font-size:
+          clamp(43px, 13vw, 64px);
+      }
+
+      h2 {
+        font-size:
+          clamp(37px, 11vw, 52px);
+      }
+
+      .hero p,
+      .story p,
+      .products-page-heading p {
+        max-width:
+          100%;
+
+        font-size: 13px;
+
+        line-height:
+          1.75;
+      }
+
+      .hero-actions {
+        gap: 15px;
+
+        margin-top:
+          25px;
+      }
+
+
+      /* HERO IMAGE */
+
+      .hero-image {
+        width: 100%;
+
+        max-width:
+          500px;
+
+        margin:
+          0 auto;
+
+        aspect-ratio:
+          1 / .92;
+
+        border-radius:
+          45% 45% 8px 45%;
+
+        box-shadow:
+          10px 12px 0
+          rgba(224,122,95,.17),
+
+          0 20px 40px
+          rgba(45,90,39,.10);
+      }
+
+      .stamp {
+        width: 76px;
+        height: 76px;
+
+        right: 6%;
+        bottom: 7%;
+
+        font-size: 10px;
+      }
+
+
+      /* BENEFITS */
+
+      .benefits {
+        justify-content:
+          flex-start;
+
+        gap: 30px;
+
+        padding:
+          15px 20px;
+
+        overflow-x:
+          auto;
+
+        white-space:
+          nowrap;
+
+        font-size: 14px;
+
+        scrollbar-width:
+          none;
+      }
+
+      .benefits::-webkit-scrollbar {
+        display: none;
+      }
+
+      .benefits div {
+        flex-shrink: 0;
+      }
+
+
+      /* STORY */
+
+      .story {
+        display: flex;
+
+        flex-direction:
+          column;
+
+        gap: 45px;
+
+        padding:
+          75px 20px 80px;
+      }
+
+      .story-image {
+        width: 100%;
+
+        max-width:
+          520px;
+
+        margin:
+          0 auto;
+
+        aspect-ratio:
+          1 / .95;
+
+        border-radius:
+          8px 45% 8px 8px;
+      }
+
+
+      /* HIGHLIGHTS */
+
+      .highlights {
+        width:
+          calc(100% - 40px);
+
+        grid-template-columns:
+          1fr;
+
+        margin-bottom:
+          70px;
+      }
+
+
+      /* GALLERY */
+
+      .gallery-section {
+        padding:
+          20px 20px 70px;
+      }
+
+      .gallery {
+        display: grid;
+
+        grid-template-columns:
+          1fr 1fr;
+
+        grid-template-rows:
+          190px 150px;
+      }
+
+      .gallery-item:first-child {
+        grid-column:
+          span 2;
+
+        grid-row:
+          span 1;
+      }
+
+
+      /* LOCATION */
+
+      .location-section {
+        width:
+          calc(100% - 40px);
+
+        grid-template-columns:
+          1fr;
+
+        margin-bottom:
+          70px;
+      }
+
+
+      /* CONTACT */
+
+      .contact {
+        width:
+          calc(100% - 40px);
+
+        margin:
+          45px auto 70px;
+
+        padding:
+          45px 22px;
+      }
+
+      .contact h2 {
+        font-size:
+          clamp(35px, 10vw, 48px);
+      }
+
+      .contact .main-button {
+        width: 100%;
+
+        max-width:
+          300px;
+      }
+
+
+      /* PRODUCTS */
+
+      .products-page {
+        min-height:
+          auto;
+
+        padding:
+          35px 20px 70px;
+      }
+
+      .products-page-heading {
+        display: block;
+
+        margin:
+          48px 0 22px;
+      }
+
+      .products-page-heading h1 {
+        font-size:
+          clamp(40px, 12vw, 58px);
+      }
+
+      .products-page-heading p {
+        margin-top:
+          20px;
+      }
+
+
+      /* FILTERS */
+
+      .filters {
+        gap: 8px;
+
+        margin-bottom:
+          25px;
+
+        overflow-x:
+          auto;
+
+        flex-wrap:
+          nowrap;
+
+        padding-bottom:
+          5px;
+
+        scrollbar-width:
+          none;
+      }
+
+      .filters::-webkit-scrollbar {
+        display: none;
+      }
+
+      .filter {
+        flex-shrink: 0;
+
+        padding:
+          10px 16px;
+      }
+
+
+      /* PRODUCTS */
+
+      .product-grid {
+        grid-template-columns:
+          1fr;
+
+        gap: 20px;
+      }
+
+      .product {
+        width: 100%;
+      }
+
+      .product:hover {
+        transform:
+          translateY(-5px);
+      }
+
+      .product-image {
+        height:
+          min(70vw, 300px);
+      }
+
+      .product-info {
+        padding:
+          18px;
+      }
+
+      .product h3 {
+        font-size:
+          21px;
+      }
+
+      .product p {
+        min-height:
+          auto;
+      }
+
+      .add-button {
+        min-height:
+          42px;
+      }
+
+
+      /* FOOTER */
+
+      footer {
+        flex-direction:
+          column;
+
+        align-items:
+          center;
+
+        padding:
+          30px 20px;
+
+        gap:
+          17px;
+
+        text-align:
+          center;
+      }
+
+      footer .logo {
+        margin: 0;
+      }
+
+    }
+
+
+    /* =========================================================
+       CELULAR PEQUENO
+    ========================================================= */
+
+    @media (max-width: 420px) {
+
+      .radio-message {
+        max-width:
+          145px;
+      }
+
+      .radio-title {
+        font-size:
+          9px;
+      }
+
+      .radio-volume {
+        display: none;
+      }
+
+      header {
+        min-height:
+          72px;
+
+        padding:
+          15px 14px;
+      }
+
+      .menu-button {
+        left: 14px;
+        top: 14px;
+
+        width: 41px;
+        height: 41px;
+      }
+
+      .logo {
+        font-size:
+          18px;
+
+        gap: 7px;
+      }
+
+      .logo-icon {
+        width: 31px;
+        height: 31px;
+
+        flex-basis:
+          31px;
+      }
+
+      .hero {
+        padding-top:
+          42px;
+      }
+
+      h1 {
+        font-size:
+          43px;
+      }
+
+      .hero-actions {
+        flex-direction:
+          column;
+
+        align-items:
+          stretch;
+      }
+
+      .hero-actions .main-button,
+      .hero-actions .text-button {
+        width: 100%;
+      }
+
+      .hero-image {
+        border-radius:
+          40% 40% 7px 40%;
+      }
+
+      .stamp {
+        width: 68px;
+        height: 68px;
+
+        font-size: 9px;
+      }
+
+      .story {
+        padding-top:
+          60px;
+      }
+
+      .products-page-heading h1 {
+        font-size:
+          42px;
+      }
+
+      .contact {
+        padding:
+          40px 18px;
+      }
+
+    }
+
+
+    /* =========================================================
+       ACESSIBILIDADE
+    ========================================================= */
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation:
+          none !important;
+
+        transition:
+          none !important;
+
+        scroll-behavior:
+          auto !important;
+      }
+
+    }
+
+  
+/* Google Maps premium */
+.location-section .text-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;min-height:52px;padding:0 22px;border-radius:16px;background:linear-gradient(135deg,#2d5a27,#477d3d);color:#fff!important;text-decoration:none;font-weight:800;box-shadow:0 10px 25px rgba(45,90,39,.2);transition:.3s ease;}
+.location-section .text-button:before{content:"📍";font-size:19px;transition:.3s ease;}
+.location-section .text-button:after{content:"";position:absolute;top:-80%;left:-70%;width:42%;height:260%;transform:rotate(22deg);background:rgba(255,255,255,.2);transition:.55s ease;}
+.location-section .text-button:hover{transform:translateY(-4px);box-shadow:0 17px 34px rgba(45,90,39,.28);background:linear-gradient(135deg,#244b20,#4b873f);}
+.location-section .text-button:hover:before{transform:scale(1.12) translateY(-2px);}
+.location-section .text-button:hover:after{left:125%;}
+.location-section .text-button:active{transform:translateY(-1px) scale(.98);}
+@media(max-width:600px){.location-section .text-button{width:100%;}}
+
+
+
+    /* BOTÃO GOOGLE MAPS — compacto e profissional */
+    .location-section .text-button {
+      width: fit-content;
+      max-width: 100%;
+      min-height: 44px;
+      padding: 0 16px;
+      gap: 8px;
+      border-radius: 12px;
+      font-size: 13px;
+      letter-spacing: .1px;
+      box-shadow: 0 8px 20px rgba(45, 90, 39, .16);
+    }
+
+    .location-section .text-button:before {
+      font-size: 16px;
+    }
+
+    .location-section .text-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(45, 90, 39, .22);
+    }
+
+    @media (max-width: 600px) {
+      .location-section .text-button {
+        width: fit-content;
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =========================================================
+       RÁDIO FIXADA
+  ========================================================= -->
+
+  <div class="radio-player">
+
+    <div class="radio-inner">
+
+      <button
+        class="radio-play"
+        id="radioPlay"
+        onclick="toggleRadio()"
+        aria-label="Tocar rádio"
+      >
+        ▶
+      </button>
+
+      <div class="radio-equalizer" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+
+      <div class="radio-message">
+
+        <span class="radio-live">
+          <span class="radio-dot"></span>
+          AO VIVO
+        </span>
+
+        <div class="radio-marquee" aria-label="Mensagem da rádio">
+          <div class="radio-marquee-track">
+            <span>🎧 OUÇA A SUA RÁDIO <b class="radio-star">•</b> HORTIFRUTI DA ROÇA <b class="radio-star">•</b> OUÇA A SUA RÁDIO <b class="radio-star">•</b></span>
+            <span aria-hidden="true">🎧 OUÇA A SUA RÁDIO <b class="radio-star">•</b> HORTIFRUTI DA ROÇA <b class="radio-star">•</b> OUÇA A SUA RÁDIO <b class="radio-star">•</b></span>
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="radio-volume">
+
+        <span
+          class="radio-volume-icon"
+          id="volumeIcon"
+        >
+          🔊
+        </span>
+
+        <input
+          id="volumeControl"
+          type="range"
+          min="0"
+          max="1"
+          step="0.01"
+          value="0.8"
+          aria-label="Volume da rádio"
+        >
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- PLAYER DE ÁUDIO -->
+
+  <audio
+    id="radioAudio"
+    preload="none"
+    src="https://azura.webboasnovas.com.br/listen/web_radio_jg/radio.mp3"
+  ></audio>
+
+
+  <!-- DETALHES DE FUNDO -->
+
+  <div class="background-shape shape-one"></div>
+
+  <div class="background-shape shape-two"></div>
+
+
+  <!-- =========================================================
+       TOPBAR
+  ========================================================= -->
+
+  <div class="topbar">
+
+    <span>
+      🌿 Fresquinho, local e escolhido com carinho
+    </span>
+
+    <a
+      href="https://www.instagram.com/hortifruti_daroca_/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      Instagram: @hortifruti_daroca_
+    </a>
+
+  </div>
+
+
+  <!-- =========================================================
+       HEADER
+  ========================================================= -->
+
+  <header>
+
+    <button
+      class="menu-button"
+      onclick="toggleMenu()"
+      aria-label="Abrir menu"
+      aria-expanded="false"
+    >
+      ⋮
+    </button>
+
+
+    <button
+      class="logo"
+      onclick="showHome()"
+    >
+
+      <span class="logo-icon">
+        🌿
+      </span>
+
+      Hortifruti
+      <em>da Roça</em>
+
+    </button>
+
+
+    <nav id="menu">
+
+      <button
+        onclick="showHome(); closeMenu()"
+      >
+        Início
+      </button>
+
+      <button
+        onclick="showProducts(); closeMenu()"
+      >
+        Nossos produtos
+      </button>
+
+      <button
+        onclick="showHome('sobre'); closeMenu()"
+      >
+        A loja
+      </button>
+
+      <button
+        onclick="showHome('localizacao'); closeMenu()"
+      >
+        Localização
+      </button>
+
+      <button
+        onclick="showHome('contato'); closeMenu()"
+      >
+        Contato
+      </button>
+
+      <button
+        class="cart-button"
+        onclick="showCart(); closeMenu()"
+      >
+        Carrinho
+
+        <span id="cartCount">
+          0
+        </span>
+
+      </button>
+
+
+      <a
+        class="instagram-button"
+        href="https://www.instagram.com/hortifruti_daroca_/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        📷 Instagram
+      </a>
+
+    </nav>
+
+  </header>
+
+
+  <!-- =========================================================
+       APP
+  ========================================================= -->
+
+  <main id="app"></main>
+
+
+  <!-- =========================================================
+       FOOTER
+  ========================================================= -->
+
+  <footer>
+
+    <button
+      class="logo"
+      onclick="showHome()"
+    >
+
+      <span class="logo-icon">
+        🌿
+      </span>
+
+      Hortifruti
+      <em>da Roça</em>
+
+    </button>
+
+    <span>
+      Produtos frescos escolhidos com carinho
+    </span>
+
+    <a
+      href="https://www.instagram.com/hortifruti_daroca_/"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      📷 Instagram
+    </a>
+
+  </footer>
+
+
+  <script>
+
+    /* =========================================================
+       RÁDIO
+    ========================================================= */
+
+    const radio =
+      document.getElementById("radioAudio");
+
+    const radioButton =
+      document.getElementById("radioPlay");
+
+    const volumeControl =
+      document.getElementById("volumeControl");
+
+    const volumeIcon =
+      document.getElementById("volumeIcon");
+
+
+    /* VOLUME INICIAL */
+
+    radio.volume = 0.8;
+
+
+    /* =========================================================
+       PLAY / PAUSE
+    ========================================================= */
+
+    function toggleRadio() {
+
+      if (radio.paused) {
+
+        radio.play()
+          .then(() => {
+
+            radioButton.textContent = "❚❚";
+
+            radioButton.classList.add(
+              "playing"
+            );
+
+            radioButton.setAttribute(
+              "aria-label",
+              "Pausar rádio"
+            );
+
+          })
+          .catch(error => {
+
+            console.log(
+              "Não foi possível iniciar a rádio:",
+              error
+            );
+
+            alert(
+              "Não foi possível iniciar a rádio. Clique novamente no botão Play."
+            );
+
+          });
+
+      } else {
+
+        radio.pause();
+
+        radioButton.textContent = "▶";
+
+        radioButton.classList.remove(
+          "playing"
+        );
+
+        radioButton.setAttribute(
+          "aria-label",
+          "Tocar rádio"
+        );
+
+      }
+
+    }
+
+
+    /* =========================================================
+       CONTROLE DE VOLUME
+    ========================================================= */
+
+    volumeControl.addEventListener(
+      "input",
+      function () {
+
+        radio.volume =
+          Number(this.value);
+
+
+        if (radio.volume === 0) {
+
+          volumeIcon.textContent = "🔇";
+
+        } else if (
+          radio.volume < .5
+        ) {
+
+          volumeIcon.textContent = "🔉";
+
+        } else {
+
+          volumeIcon.textContent = "🔊";
+
+        }
+
+      }
+    );
+
+
+    /* =========================================================
+       SE A RÁDIO DER ERRO
+    ========================================================= */
+
+    radio.addEventListener(
+      "error",
+      function () {
+
+        radioButton.textContent = "⚠";
+
+        radioButton.classList.remove(
+          "playing"
+        );
+
+      }
+    );
+
+
+    /* =========================================================
+       INSTAGRAM
+    ========================================================= */
+
+    const instagram =
+      "https://www.instagram.com/hortifruti_daroca_/";
+
+
+    /* =========================================================
+       PRODUTOS
+    ========================================================= */
+
+    const products = [
+
+      {
+        name: "Tomate da terra",
+        type: "Hortaliças",
+        note: "Vermelho, firme e cheio de sabor.",
+        price: 7.99,
+        oldPrice: 9.99,
+        offer: true,
+        image:
+          "https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Cenoura fresquinha",
+        type: "Hortaliças",
+        note: "Crocante, doce e direto da roça.",
+        price: 5.99,
+        oldPrice: null,
+        offer: false,
+        image:
+          "https://images.unsplash.com/photo-1445282768818-728615cc910a?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Frutas da estação",
+        type: "Frutas",
+        note: "A natureza escolhe o melhor.",
+        price: 8.99,
+        oldPrice: null,
+        offer: false,
+        image:
+          "https://images.unsplash.com/photo-1582979512210-99b6a53386f9?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Maçã vermelhinha",
+        type: "Frutas",
+        note: "Docinha para o lanche da família.",
+        price: 8.49,
+        oldPrice: 10.49,
+        offer: true,
+        image:
+          "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Banana prata",
+        type: "Frutas",
+        note: "Macia, nutritiva e no ponto certo.",
+        price: 6.99,
+        oldPrice: null,
+        offer: false,
+        image:
+          "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Morangos",
+        type: "Frutas",
+        note: "Pequenos, perfumados e irresistíveis.",
+        price: 11.99,
+        oldPrice: 14.99,
+        offer: true,
+        image:
+          "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Alface fresquinha",
+        type: "Hortaliças",
+        note: "Folhas verdes e crocantes.",
+        price: 3.99,
+        oldPrice: null,
+        offer: false,
+        image:
+          "https://images.unsplash.com/photo-1556801712-76c8eb07bbc9?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Batata da roça",
+        type: "Hortaliças",
+        note: "Versátil para qualquer receita.",
+        price: 6.49,
+        oldPrice: null,
+        offer: false,
+        image:
+          "https://images.unsplash.com/photo-1518977676601-b53f82aba655?auto=format&fit=crop&w=900&q=80"
+      },
+
+      {
+        name: "Almeirao Americano",
+        type: "Almeirao",
+        note: "Uma seleção colorida para a semana.",
+        price: 3.90,
+        oldPrice: 49.90,
+        offer: true,
+        image:
+          "https://images.unsplash.com/photo-1581592705138-6f4c1a493cec?auto=format&fit=crop&w=900&q=80"
+      }
+
+    ];
+
+
+    /* =========================================================
+       CARRINHO
+    ========================================================= */
+
+    let selected = [];
+
+    let currentCategory = "Tudo";
+
+    let currentSearch = "";
+
+
+    /* =========================================================
+       MENU
+    ========================================================= */
+
+    function toggleMenu() {
+
+      const menu =
+        document.getElementById("menu");
+
+      const button =
+        document.querySelector(
+          ".menu-button"
+        );
+
+      const isOpen =
+        menu.classList.toggle("open");
+
+
+      if (isOpen) {
+
+        button.textContent = "×";
+
+        button.setAttribute(
+          "aria-label",
+          "Fechar menu"
+        );
+
+        button.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+
+      } else {
+
+        button.textContent = "⋮";
+
+        button.setAttribute(
+          "aria-label",
+          "Abrir menu"
+        );
+
+        button.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+
+      }
+
+    }
+
+
+    function closeMenu() {
+
+      const menu =
+        document.getElementById("menu");
+
+      const button =
+        document.querySelector(
+          ".menu-button"
+        );
+
+
+      menu.classList.remove("open");
+
+      button.textContent = "⋮";
+
+      button.setAttribute(
+        "aria-label",
+        "Abrir menu"
+      );
+
+      button.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+
+    }
+
+
+    /* =========================================================
+       CARRINHO
+    ========================================================= */
+
+    function updateCartCount() {
+
+      const cartCount =
+        document.getElementById(
+          "cartCount"
+        );
+
+      if (cartCount) {
+
+        cartCount.textContent =
+          selected.length;
+
+      }
+
+    }
+
+
+    /* =========================================================
+       SCROLL PARA CIMA
+    ========================================================= */
+
+    function goTop() {
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+
+    }
+
+
+    /* =========================================================
+       REVELAÇÃO
+    ========================================================= */
+
+    function activateReveal() {
+
+      const elements =
+        document.querySelectorAll(
+          ".reveal"
+        );
+
+
+      if (!("IntersectionObserver" in window)) {
+
+        elements.forEach(
+          element =>
+            element.classList.add(
+              "visible"
+            )
+        );
+
+        return;
+      }
+
+
+      const observer =
+        new IntersectionObserver(
+
+          entries => {
+
+            entries.forEach(entry => {
+
+              if (
+                entry.isIntersecting
+              ) {
+
+                entry.target.classList.add(
+                  "visible"
+                );
+
+                observer.unobserve(
+                  entry.target
+                );
+
+              }
+
+            });
+
+          },
+
+          {
+            threshold: .12
+          }
+
+        );
+
+
+      elements.forEach(
+        element =>
+          observer.observe(element)
+      );
+
+    }
+
+
+    /* =========================================================
+       PÁGINA INICIAL
+    ========================================================= */
+
+    function showHome(anchor = "") {
+
+      document.getElementById(
+        "app"
+      ).innerHTML = `
+
+        <section
+          class="hero"
+          id="inicio"
+        >
+
+          <div class="hero-content">
+
+            <div class="eyebrow">
+              O sabor de verdade começa aqui
+            </div>
+
+            <h1>
+              Da nossa roça<br>
+              <i>para sua mesa.</i>
+            </h1>
+
+            <p>
+              Frutas, verduras e produtos escolhidos
+              com cuidado para deixar o seu dia mais
+              leve, colorido e cheio de sabor.
+            </p>
+
+            <div class="hero-actions">
+
+              <a
+                class="main-button"
+                href="${instagram}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Conheça a loja ↗
+              </a>
+
+              <button
+                class="text-button"
+                onclick="showProducts()"
+              >
+                Ver produtos →
+              </button>
+
+            </div>
+
+            <div class="scroll-indicator">
+
+              <span class="scroll-line"></span>
+
+              Role para conhecer
+
+            </div>
+
+          </div>
+
+
+          <div class="hero-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1761594607220-72e54bc3e98b?auto=format&fit=crop&w=1400&q=85"
+              alt="Frutas e verduras frescas"
+            >
+
+            <div class="stamp">
+              feito com<br>
+              <strong>carinho</strong> ♥
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <div class="benefits">
+
+          <div>
+            🌿 Frescor da roça
+          </div>
+
+          <div>
+            ♡ Escolhido à mão
+          </div>
+
+          <div>
+            ☼ Sabor de verdade
+          </div>
+
+        </div>
+
+
+        <section
+          class="story reveal"
+          id="sobre"
+        >
+
+          <div class="story-image">
+
+            <img
+              src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=80"
+              alt="Cesta com produtos frescos"
+              loading="lazy"
+            >
+
+          </div>
+
+
+          <div>
+
+            <div class="eyebrow">
+              Nossa essência
+            </div>
+
+            <h2>
+              Mais que uma loja.<br>
+              <i>Um jeito de cuidar.</i>
+            </h2>
+
+            <p>
+              Na Hortifruti da Roça, a gente acredita
+              que comida boa começa na origem.
+              Cada produto chega até você com frescor,
+              afeto e aquele gostinho de coisa feita
+              do jeito certo.
+            </p>
+
+            <button
+              class="text-button"
+              onclick="showProducts()"
+            >
+              Conhecer nossos produtos →
+            </button>
+
+          </div>
+
+        </section>
+
+
+        <section class="highlights reveal">
+
+          <div class="highlight">
+
+            <strong>
+              100%
+            </strong>
+
+            <span>
+              Selecionado com carinho
+            </span>
+
+          </div>
+
+
+          <div class="highlight">
+
+            <strong>
+              Fresco
+            </strong>
+
+            <span>
+              Produtos escolhidos diariamente
+            </span>
+
+          </div>
+
+
+          <div class="highlight">
+
+            <strong>
+              Local
+            </strong>
+
+            <span>
+              Atendimento próximo de você
+            </span>
+
+          </div>
+
+        </section>
+
+
+        <section
+          class="gallery-section reveal"
+        >
+
+          <div class="section-heading">
+
+            <div class="eyebrow">
+              Um pouco da nossa variedade
+            </div>
+
+            <h2>
+              Cor, frescor e<br>
+              <i>sabor.</i>
+            </h2>
+
+            <p>
+              Produtos selecionados para deixar
+              sua mesa mais bonita e sua alimentação
+              ainda mais gostosa.
+            </p>
+
+          </div>
+
+
+          <div class="gallery">
+
+            <div class="gallery-item">
+
+              <img
+                src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1100&q=80"
+                alt="Produtos frescos"
+                loading="lazy"
+              >
+
+            </div>
+
+
+            <div class="gallery-item">
+
+              <img
+                src="https://images.unsplash.com/photo-1561136594-7f68413baa99?auto=format&fit=crop&w=900&q=80"
+                alt="Tomates"
+                loading="lazy"
+              >
+
+            </div>
+
+
+            <div class="gallery-item">
+
+              <img
+                src="https://images.unsplash.com/photo-1464965911861-746a04b4bca6?auto=format&fit=crop&w=900&q=80"
+                alt="Morangos"
+                loading="lazy"
+              >
+
+            </div>
+
+
+            <div class="gallery-item">
+
+              <img
+                src="https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?auto=format&fit=crop&w=900&q=80"
+                alt="Maçãs"
+                loading="lazy"
+              >
+
+            </div>
+
+
+            <div class="gallery-item">
+
+              <img
+                src="https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?auto=format&fit=crop&w=900&q=80"
+                alt="Bananas"
+                loading="lazy"
+              >
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section
+          class="location-section reveal"
+          id="localizacao"
+        >
+
+          <div class="info-card">
+
+            <div class="info-icon">
+              📍
+            </div>
+
+            <h3>
+              Onde estamos
+            </h3>
+
+            <p>
+              Estrada União e Indústria, 33.980 — Posse,
+              Petrópolis, Rio de Janeiro.
+            </p>
+
+            <p>
+              Abra a localização exata do Hortifruti no Google Maps.
+            </p>
+
+            <a
+              class="text-button"
+              href="https://www.google.com/maps/search/?api=1&query=Da%20Ro%C3%A7a%20Hortifruti%2C%20Estrada%20Uni%C3%A3o%20e%20Ind%C3%BAstria%2C%2033980%2C%20Posse%2C%20Petr%C3%B3polis%2C%20RJ"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver localização no Google Maps →
+            </a>
+
+          </div>
+
+
+          <div class="info-card">
+
+            <div class="info-icon">
+              🕐
+            </div>
+
+            <h3>
+              Horário de funcionamento
+            </h3>
+
+            <p>
+              Segunda a sábado:
+              08:00 às 19:00
+            </p>
+
+            <p>
+              Domingo:
+              08:00 às 13:00
+            </p>
+
+            <div class="open-status">
+
+              <span class="status-dot"></span>
+
+              Atendimento próximo de você
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section
+          class="contact reveal"
+          id="contato"
+        >
+
+          <div class="eyebrow">
+            Vem conversar com a gente
+          </div>
+
+          <h2>
+            Tem novidade no<br>
+            <i>nosso Instagram.</i>
+          </h2>
+
+          <p>
+            Acompanhe os produtos que chegaram,
+            promoções e um pouco mais da rotina
+            da Hortifruti da Roça.
+          </p>
+
+          <a
+            class="main-button"
+            href="${instagram}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Seguir no Instagram ↗
+          </a>
+
+        </section>
+
+      `;
+
+
+      updateCartCount();
+
+      activateReveal();
+
+      goTop();
+
+
+      if (anchor) {
+
+        setTimeout(() => {
+
+          document
+            .getElementById(anchor)
+            ?.scrollIntoView({
+              behavior: "smooth"
+            });
+
+        }, 350);
+
+      }
+
+    }
+
+
+    /* =========================================================
+       PRODUTOS
+    ========================================================= */
+
+    function showProducts() {
+
+      currentCategory = "Tudo";
+
+      currentSearch = "";
+
+
+      document.getElementById(
+        "app"
+      ).innerHTML = `
+
+        <section class="products-page">
+
+          <button
+            class="back-button"
+            onclick="showHome()"
+          >
+            ← Voltar para a página inicial
+          </button>
+
+
+          <div class="products-page-heading">
+
+            <div>
+
+              <div class="eyebrow">
+                Catálogo da roça
+              </div>
+
+              <h1>
+                Tem sempre algo<br>
+                <i>fresquinho esperando.</i>
+              </h1>
+
+            </div>
+
+            <p>
+              Escolha seus favoritos, encontre
+              seus produtos e monte sua cesta.
+            </p>
+
+          </div>
+
+
+          <div class="search-box">
+
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="🔎 Procurar produto..."
+              oninput="searchProducts(this.value)"
+            >
+
+            <span class="search-icon">
+              ⌕
+            </span>
+
+          </div>
+
+
+          <div class="catalog-count">
+
+            <strong id="productCount">
+              ${products.length}
+            </strong>
+
+            opções disponíveis
+
+          </div>
+
+
+          <div class="filters">
+
+            <button
+              class="filter active"
+              onclick="filterProducts('Tudo', this)"
+            >
+              Tudo
+            </button>
+
+            <button
+              class="filter"
+              onclick="filterProducts('Frutas', this)"
+            >
+              Frutas
+            </button>
+
+            <button
+              class="filter"
+              onclick="filterProducts('Hortaliças', this)"
+            >
+              Hortaliças
+            </button>
+
+            <button
+              class="filter"
+              onclick="filterProducts('Cestas', this)"
+            >
+              Cestas
+            </button>
+
+            <button
+              class="filter"
+              onclick="filterProducts('Ofertas', this)"
+            >
+              🔥 Ofertas
+            </button>
+
+          </div>
+
+
+          <div
+            class="product-grid"
+            id="productGrid"
+          ></div>
+
+        </section>
+
+      `;
+
+
+      renderProducts(products);
+
+      updateCartCount();
+
+      goTop();
+
+    }
+
+
+    /* =========================================================
+       RENDER
+    ========================================================= */
+
+    function renderProducts(list) {
+
+      const count =
+        document.getElementById(
+          "productCount"
+        );
+
+      const grid =
+        document.getElementById(
+          "productGrid"
+        );
+
+
+      if (!count || !grid) {
+        return;
+      }
+
+
+      count.textContent =
+        list.length;
+
+
+      if (!list.length) {
+
+        grid.innerHTML = `
+
+          <div class="empty-search">
+
+            <h3>
+              Nenhum produto encontrado
+            </h3>
+
+            <p>
+              Tente procurar por outro nome
+              ou escolha outra categoria.
+            </p>
+
+          </div>
+
+        `;
+
+        return;
+      }
+
+
+      grid.innerHTML =
+        list.map(product => {
+
+          const chosen =
+            selected.includes(
+              product.name
+            );
+
+
+          const priceHTML =
+            product.price
+              ? `
+
+                ${
+                  product.oldPrice
+                    ? `
+                      <span class="old-price">
+                        R$ ${product.oldPrice
+                          .toFixed(2)
+                          .replace(".", ",")}
+                      </span>
+                    `
+                    : ""
+                }
+
+                <span class="price">
+                  R$ ${product.price
+                    .toFixed(2)
+                    .replace(".", ",")}
+                </span>
+
+              `
+              : `
+
+                <span class="price consult">
+                  Consulte o preço
+                </span>
+
+              `;
+
+
+          return `
+
+            <article class="product">
+
+              <div class="product-image">
+
+                <img
+                  src="${product.image}"
+                  alt="${product.name}"
+                  loading="lazy"
+                >
+
+                <span class="tag">
+                  ${product.type}
+                </span>
+
+
+                ${
+                  product.offer
+                    ? `
+                      <span class="offer-tag">
+                        🔥 OFERTA
+                      </span>
+                    `
+                    : ""
+                }
+
+
+                <span class="fresh">
+                  fresquinho
+                </span>
+
+              </div>
+
+
+              <div class="product-info">
+
+                <h3>
+                  ${product.name}
+                </h3>
+
+                <p>
+                  ${product.note}
+                </p>
+
+
+                <div class="price-area">
+
+                  ${priceHTML}
+
+                </div>
+
+
+                <button
+                  class="add-button ${
+                    chosen
+                      ? "selected"
+                      : ""
+                  }"
+                  onclick="addToCart('${product.name}')"
+                >
+
+                  ${
+                    chosen
+                      ? "✓ Na sua cesta"
+                      : "Adicionar à cesta"
+                  }
+
+                  →
+
+                </button>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join("");
+
+    }
+
+
+    /* =========================================================
+       FILTROS
+    ========================================================= */
+
+    function filterProducts(
+      category,
+      button
+    ) {
+
+      currentCategory =
+        category;
+
+
+      document
+        .querySelectorAll(".filter")
+        .forEach(item => {
+
+          item.classList.remove(
+            "active"
+          );
+
+        });
+
+
+      if (button) {
+
+        button.classList.add(
+          "active"
+        );
+
+      }
+
+
+      applyProductFilters();
+
+    }
+
+
+    /* =========================================================
+       PESQUISA
+    ========================================================= */
+
+    function searchProducts(value) {
+
+      currentSearch =
+        value.toLowerCase().trim();
+
+      applyProductFilters();
+
+    }
+
+
+    function applyProductFilters() {
+
+      let filtered =
+        [...products];
+
+
+      if (
+        currentCategory !== "Tudo"
+      ) {
+
+        if (
+          currentCategory ===
+          "Ofertas"
+        ) {
+
+          filtered =
+            filtered.filter(
+              product =>
+                product.offer
+            );
+
+        } else {
+
+          filtered =
+            filtered.filter(
+              product =>
+                product.type ===
+                currentCategory
+            );
+
+        }
+
+      }
+
+
+      if (currentSearch) {
+
+        filtered =
+          filtered.filter(
+            product =>
+
+              product.name
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+              ||
+
+              product.type
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+              ||
+
+              product.note
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+          );
+
+      }
+
+
+      renderProducts(
+        filtered
+      );
+
+    }
+
+
+    /* =========================================================
+       ADICIONAR CARRINHO
+    ========================================================= */
+
+    function addToCart(name) {
+
+      if (
+        !selected.includes(name)
+      ) {
+
+        selected.push(name);
+
+      } else {
+
+        selected =
+          selected.filter(
+            item =>
+              item !== name
+          );
+
+      }
+
+
+      updateCartCount();
+
+      renderProducts(
+        getCurrentProducts()
+      );
+
+    }
+
+
+    function getCurrentProducts() {
+
+      let list =
+        [...products];
+
+
+      if (
+        currentCategory !==
+        "Tudo"
+      ) {
+
+        if (
+          currentCategory ===
+          "Ofertas"
+        ) {
+
+          list =
+            list.filter(
+              product =>
+                product.offer
+            );
+
+        } else {
+
+          list =
+            list.filter(
+              product =>
+                product.type ===
+                currentCategory
+            );
+
+        }
+
+      }
+
+
+      if (currentSearch) {
+
+        list =
+          list.filter(
+            product =>
+
+              product.name
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+              ||
+
+              product.type
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+              ||
+
+              product.note
+                .toLowerCase()
+                .includes(
+                  currentSearch
+                )
+
+          );
+
+      }
+
+
+      return list;
+
+    }
+
+
+    /* =========================================================
+       REMOVER
+    ========================================================= */
+
+    function removeFromCart(name) {
+
+      selected =
+        selected.filter(
+          product =>
+            product !== name
+        );
+
+
+      updateCartCount();
+
+      showCart();
+
+    }
+
+
+    /* =========================================================
+       CARRINHO
+    ========================================================= */
+
+    function showCart() {
+
+      const cartProducts =
+        products.filter(
+          product =>
+            selected.includes(
+              product.name
+            )
+        );
+
+
+      document.getElementById(
+        "app"
+      ).innerHTML = `
+
+        <section class="products-page">
+
+          <button
+            class="back-button"
+            onclick="showProducts()"
+          >
+            ← Voltar para os produtos
+          </button>
+
+
+          <div class="products-page-heading">
+
+            <div>
+
+              <div class="eyebrow">
+                Sua seleção
+              </div>
+
+              <h1>
+                Minha <i>cesta.</i>
+              </h1>
+
+            </div>
+
+            <p>
+              Confira os produtos escolhidos
+              antes de falar com a gente.
+            </p>
+
+          </div>
+
+
+          ${
+            cartProducts.length
+
+              ? `
+
+                <div class="catalog-count">
+
+                  <strong>
+                    ${cartProducts.length}
+                  </strong>
+
+                  ${
+                    cartProducts.length === 1
+                      ? "item escolhido"
+                      : "itens escolhidos"
+                  }
+
+                </div>
+
+
+                <div class="product-grid">
+
+                  ${cartProducts.map(
+                    product => `
+
+                    <article class="product">
+
+                      <div class="product-image">
+
+                        <img
+                          src="${product.image}"
+                          alt="${product.name}"
+                          loading="lazy"
+                        >
+
+                        <span class="tag">
+                          ${product.type}
+                        </span>
+
+                        <span class="fresh">
+                          na cesta
+                        </span>
+
+                      </div>
+
+
+                      <div class="product-info">
+
+                        <h3>
+                          ${product.name}
+                        </h3>
+
+                        <p>
+                          ${product.note}
+                        </p>
+
+
+                        <div class="price-area">
+
+                          <span class="price">
+                            R$ ${
+                              product.price
+                                .toFixed(2)
+                                .replace(
+                                  ".",
+                                  ","
+                                )
+                            }
+                          </span>
+
+                        </div>
+
+
+                        <button
+                          class="add-button selected"
+                          onclick="removeFromCart('${product.name}')"
+                        >
+                          Remover da cesta →
+                        </button>
+
+                      </div>
+
+                    </article>
+
+                  `
+                  ).join("")}
+
+                </div>
+
+
+                <section
+                  class="contact reveal visible"
+                >
+
+                  <div class="eyebrow">
+                    Pronto para pedir?
+                  </div>
+
+                  <h2>
+                    Envie sua cesta<br>
+                    <i>pelo Instagram.</i>
+                  </h2>
+
+                  <p>
+                    Fale com a gente pelo direct
+                    para confirmar os produtos,
+                    preços e a entrega.
+                  </p>
+
+                  <a
+                    class="main-button"
+                    href="${instagram}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Finalizar pedido ↗
+                  </a>
+
+                </section>
+
+              `
+
+              : `
+
+                <section
+                  class="contact reveal visible"
+                >
+
+                  <div class="eyebrow">
+                    Sua cesta está vazia
+                  </div>
+
+                  <h2>
+                    Vamos escolher algo<br>
+                    <i>fresquinho?</i>
+                  </h2>
+
+                  <p>
+                    Conheça as frutas,
+                    hortaliças e cestas
+                    disponíveis.
+                  </p>
+
+                  <button
+                    class="main-button"
+                    onclick="showProducts()"
+                  >
+                    Ver produtos →
+                  </button>
+
+                </section>
+
+              `
+          }
+
+        </section>
+
+      `;
+
+
+      updateCartCount();
+
+      goTop();
+
+    }
+
+
+    /* =========================================================
+       INICIAR
+    ========================================================= */
+
+    showHome();
+
+
+    /* =========================================================
+       FECHAR MENU CLICANDO FORA
+    ========================================================= */
+
+    document.addEventListener(
+      "click",
+      function(event) {
+
+        const menu =
+          document.getElementById(
+            "menu"
+          );
+
+        const button =
+          document.querySelector(
+            ".menu-button"
+          );
+
+
+        if (
+          !menu ||
+          !button
+        ) {
+          return;
+        }
+
+
+        if (
+          menu.classList.contains(
+            "open"
+          ) &&
+
+          !menu.contains(
+            event.target
+          ) &&
+
+          !button.contains(
+            event.target
+          )
+        ) {
+
+          closeMenu();
+
+        }
+
+      }
+    );
+
+  </script>
+
+</body>
+</html>
